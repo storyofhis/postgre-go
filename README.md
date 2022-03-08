@@ -1,10 +1,8 @@
 # postgre-go
 
-running file: 
+installation: 
 ```shellsession
-go get github.com/go-sql-driver/mysql
-go get github.com/jinzhu/gorm
-go get github.com/jinzhu/gorm/dialects/postgres
+$ go get github.com/go-sql-driver/mysql github.com/jinzhu/gorm github.com/jinzhu/gorm/dialects/postgres
 ```
 
 .env
