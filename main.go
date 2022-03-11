@@ -1,60 +1,32 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/gin-gonic/gin"
+	"main.go/Handler"
 )
 
-type Person struct {
-	gorm.Model
+const (
+    dbDriver      = "postgres"
+    dbSource      = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
+    serverAddress = "0.0.0.0:8080"
+)
 
-	Name string
-	Email string `gorm:"typevarchar(100);unique_index"`
-	Books []Book
-}
-
-type Book struct {
-	gorm.Model
-
-	Title string
-	Author string
-	CallNumber int `gorm:"unique_index"`
-	PersonID int
-}
-
-var db *gorm.DB
-var err error
 
 func main() {
-	// load environtment variables
-	dialect := os.Getenv("DIALECT")
-	host := os.Getenv("HOST")
-	dbPort := os.Getenv("DBPORT")
-	user := os.Getenv("USER")
-	dbName := os.Getenv("NAME")
-	password := os.Getenv("PASSWORD")
+	router := gin.Default()
 
-	// Database Connetion Strings
-	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, user, dbName, password, dbPort)
+	// API Versioning
+	v1 := router.Group("/v1")
 
-	// Openning Connection to Database
-	db, err := gorm.Open(dialect, dbURI);
-	
-	if err != nil {
-		log.Fatal(err)
-	}else {
-		fmt.Println("Successfully connected to database")
-	}
+	// HTTP GET METHOD
+	v1.GET("/", Handler.RootHandler)
+	router.GET("/hello", Handler.HelloHandler)
+	router.GET("/books/:id", Handler.BooksHandler)
+	router.GET("/books", Handler.UseQuery)
+	router.GET("/books/:id/:title", Handler.UseDoubleQuery)
 
-	// close main function
-	// defer db.Close()
+	// HTTP 
 
-	// database miggration 
-	db.AutoMigrate(&Person{})
-	db.AutoMigrate(&Book{})
+	router.Run()
 }
+
