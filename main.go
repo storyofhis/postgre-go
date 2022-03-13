@@ -20,13 +20,14 @@ func main() {
 
 	// HTTP GET METHOD
 	v1.GET("/", Handler.RootHandler)
-	router.GET("/hello", Handler.HelloHandler)
-	router.GET("/books/:id", Handler.BooksHandler)
-	router.GET("/books", Handler.UseQuery)
-	router.GET("/books/:id/:title", Handler.UseDoubleQuery)
+	v1.GET("/hello", Handler.HelloHandler)
+	v1.GET("/books/:id", Handler.BooksHandler)
+	v1.GET("/books/:id/:title", Handler.UseDoubleQuery)
+	v1.GET("/query", Handler.UseQuery)
 
-	// HTTP 
-
+	// HTTP POST METHOD
+	v1.POST("/books", Handler.PostBookHandler)
+	
 	router.Run()
 }
 
